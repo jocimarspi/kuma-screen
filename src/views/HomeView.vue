@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import KumaDashboard from '../components/KumaDashboard.vue';
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <KumaDashboard />
   </main>
 </template>
