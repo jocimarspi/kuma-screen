@@ -1,6 +1,31 @@
 <script setup lang="ts">
 
+  import {ref, onMounted, onUnmounted} from 'vue';
   import MonitorCard from './MonitorCard.vue';
+  import parsePrometheusTextFormat from 'parse-prometheus-text-format'
+  import kumaService from '@/services/kuma-service';
+
+  const monitorsStatus = ref(null)
+  const updateTimer = ref(0)
+
+  async function startTimer() {
+     updateTimer.value = setInterval(async () => {
+      monitorsStatus.value =  await kumaService.getMonitorStatus()
+    }, 10000)
+  }
+
+  function stopTimer() {
+    clearInterval(updateTimer.value)
+  }
+
+  onMounted(async () => {
+    monitorsStatus.value =  await kumaService.getMonitorStatus()
+    startTimer()
+  })
+
+  onUnmounted(() => {
+    stopTimer()
+  })
 
 </script>
 
@@ -15,7 +40,12 @@
     <h2 class="container__title">DOWN (4)</h2>
     <div class="container">
 
-      <MonitorCard title="Monitor Card 1" status="monitor--down" />
+      <MonitorCard 
+        v-for="monitorStatus in monitorsStatus" 
+        :title="monitorStatus.labels.monitor_name" 
+        :key="monitorStatus.labels.monitor_name"
+        :status="monitorStatus.value"
+      />
       
     </div>
   </div>
@@ -24,15 +54,12 @@
     <h2 class="container__title">UP (85)</h2>
     <div class="container">
 
-      <MonitorCard title="Monitor Card 2" status="monitor--up" />
-      <MonitorCard title="Monitor Card 3" />
-      <MonitorCard title="Monitor Card 4" status="monitor--up" />
-      <MonitorCard title="Monitor Card 5" status="monitor--up" />
-      <MonitorCard title="Monitor Card 6" status="monitor--up" />
-      <MonitorCard title="Monitor Card 7" status="monitor--up" />
-      <MonitorCard title="Monitor Card 8" status="monitor--up" />
-      <MonitorCard title="Monitor Card 9" status="monitor--up" />
-
+      <MonitorCard 
+        v-for="monitorStatus in monitorsStatus" 
+        :title="monitorStatus.labels.monitor_name" 
+        :key="monitorStatus.labels.monitor_name"
+        :status="monitorStatus.value"
+      />
     </div>
   </div>
 

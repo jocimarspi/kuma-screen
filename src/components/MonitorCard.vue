@@ -7,23 +7,28 @@
     status?: string;
   }>();
 
+  function getStatusClass() {
+    
+    console.log(props)
+
+    switch (props.status) {
+      case '0': return 'monitor--down';
+      case '1': return 'monitor--up'
+      case '2': return 'monitor--pending';
+      case '3': return 'monitor--maintenance';
+      default: return 'monitor-undefined';
+    }
+  }
+
 </script>
-
-
-<!-- 
-Monitor Status (1 = UP, 0= DOWN, 2= PENDING, 3= MAINTENANCE)
--->
-
 
 <template>
 
-  <div :class="['monitor', status]">
+  <div :class="['monitor', getStatusClass()]">
     <h4>{{ title }}</h4>
   </div>
 
 </template>
-
-
 
 <style>
 
@@ -37,7 +42,7 @@ Monitor Status (1 = UP, 0= DOWN, 2= PENDING, 3= MAINTENANCE)
     height: 5vw;
     border-radius: 0.5vw;
     width: 100%;
-    background-color: #e7c52d;
+    background-color: #adadad;
   }
 
   .monitor--up {
@@ -46,6 +51,16 @@ Monitor Status (1 = UP, 0= DOWN, 2= PENDING, 3= MAINTENANCE)
 
   .monitor--down {
     background-color: #e22929;
+    animation: pulse 1s infinite;
+  }
+
+  .monitor--pending {
+    background-color: #e7c52d;
+    animation: pulse 1s infinite;
+  }
+
+  .monitor--maintenance {
+    background-color: #2998e2;
     animation: pulse 1s infinite;
   }
 
