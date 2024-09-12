@@ -1,7 +1,7 @@
 import axios from 'axios';
 import parsePrometheusTextFormat from 'parse-prometheus-text-format';
 
-const KUMATOKEN = "uk1_fRQ9EY9ZJC3RdHhyVxVaR5LAonjz6LJpLPXVXm9o"
+const KUMATOKEN = "uk1_Pw_OBZ5bgOvpoPa9SKw4yuZg6Ey5AKWJ6OtUivbY"
 
 class KumaService {
   async getMonitorStatus() {
@@ -9,7 +9,7 @@ class KumaService {
       const kumaMetricsPrometheusResponse = await axios.get("/uptime/metrics", {
         auth: {
           username: "",
-          password: "uk1_fRQ9EY9ZJC3RdHhyVxVaR5LAonjz6LJpLPXVXm9o"
+          password: "uk1_Pw_OBZ5bgOvpoPa9SKw4yuZg6Ey5AKWJ6OtUivbY"
         }
       })
 

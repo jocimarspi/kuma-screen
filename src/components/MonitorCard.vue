@@ -35,22 +35,25 @@
 .monitor {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0.7vw;
-    font-size: 2vw;
+    justify-content: start;
+    padding: 30px;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
     text-align: center;
-    height: 5vw;
     border-radius: 0.5vw;
     width: 100%;
-    background-color: #adadad;
+    background-color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .monitor--up {
-    background-color: #21b830;
+    background-color: #1a9b27;
   }
 
   .monitor--down {
-    background-color: #e22929;
+    background-color: #c51515;
     animation: pulse 1s infinite;
   }
 
