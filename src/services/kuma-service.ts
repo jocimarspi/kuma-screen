@@ -1,19 +1,35 @@
 import axios from 'axios';
 import parsePrometheusTextFormat from 'parse-prometheus-text-format';
 
-const KUMATOKEN = "uk1_Pw_OBZ5bgOvpoPa9SKw4yuZg6Ey5AKWJ6OtUivbY"
+const KUMATOKEN = "uk1_fRQ9EY9ZJC3RdHhyVxVaR5LAonjz6LJpLPXVXm9o"
+
+
+interface MonitorStatusLabel {
+  monitor_name: string;
+}
+
+export enum MonitorStatusEnum {
+  DOWN = '0',
+  UP = '1',
+  PENDING = '2',
+  MAINTANING = '3'
+}
+export interface MonitorStatus {
+  labels: MonitorStatusLabel
+  value: MonitorStatusEnum
+}
 
 class KumaService {
-  async getMonitorStatus() {
+  async getMonitorStatus(): Promise<MonitorStatus[] | undefined> {
     try {
       const kumaMetricsPrometheusResponse = await axios.get("/uptime/metrics", {
         auth: {
           username: "",
-          password: "uk1_Pw_OBZ5bgOvpoPa9SKw4yuZg6Ey5AKWJ6OtUivbY"
+          password: KUMATOKEN
         }
       })
-
-      if (!kumaMetricsPrometheusResponse?.data) return null
+      
+      if (!kumaMetricsPrometheusResponse?.data) return
 
       const kumaMetrics = parsePrometheusTextFormat(kumaMetricsPrometheusResponse.data)
       
@@ -23,6 +39,7 @@ class KumaService {
       return monitorStatusMetrics.metrics
     } catch (error) {
       console.error("getMonitorStatus: ", error)
+      
     }
   }
 }

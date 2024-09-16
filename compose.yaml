@@ -1,0 +1,31 @@
+services:
+  kuma-screen:
+    image: kuma-screen:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    ports:
+      - "3500:80"
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          memory: 150M
+        limits:
+          cpus: "0.5"
+          memory: 300M
+    environment:
+      BACKEND_URL: http://192.168.0.238:3001
+    # healthcheck:
+    #   test: wget -q http://localhost:80/health -O - | grep "{\"status\":\"UP\"}" || exit 1
+    #   interval: 30s
+    #   retries: 3
+    #   start_period: 30s
+    #   timeout: 5s
+
+# networks:
+#   default:
+#     external: true
+#     name: miner-network

@@ -2,10 +2,9 @@
 
   import {ref, onMounted, onUnmounted, watch} from 'vue';
   import MonitorCard from './MonitorCard.vue';
-  import parsePrometheusTextFormat from 'parse-prometheus-text-format'
-  import kumaService from '@/services/kuma-service';
+  import kumaService, { MonitorStatusEnum, type MonitorStatus } from '@/services/kuma-service';
 
-  const monitorStatuses = ref(null)
+  const monitorStatuses = ref<MonitorStatus[]>()
   const updateTimer = ref(0)
   const lastUpdate = ref<string>('')
 
@@ -20,9 +19,9 @@
   }
 
   async function startTimer() {
-     updateTimer.value = setInterval(async () => {
+    updateTimer.value = setInterval(async () => {
       monitorStatuses.value =  await kumaService.getMonitorStatus()
-    }, 10000)
+    }, 10000) as unknown as number
   }
 
   function stopTimer() {
@@ -56,11 +55,11 @@
   </header>
 
   <div id="down-services">
-    <h2 class="container__title">DOWN ({{ monitorStatuses ? monitorStatuses.filter(monitor => monitor.value === '0').length : 0 }})</h2>
+    <h2 class="container__title">DOWN ({{ monitorStatuses ? monitorStatuses.filter(monitor => monitor.value === MonitorStatusEnum.DOWN).length : 0 }})</h2>
     <div class="container">
 
       <MonitorCard 
-        v-for="monitorStatus in monitorStatuses?.filter(monitor => monitor.value === '0')" 
+        v-for="monitorStatus in monitorStatuses?.filter(monitor => monitor.value === MonitorStatusEnum.DOWN)" 
         :title="monitorStatus.labels.monitor_name" 
         :key="monitorStatus.labels.monitor_name"
         :status="monitorStatus.value"
@@ -70,11 +69,11 @@
   </div>
 
   <div id="up-services">
-    <h2 class="container__title">UP ({{ monitorStatuses ? monitorStatuses.filter(monitor => monitor.value !== '0').length : 0 }})</h2>
+    <h2 class="container__title">UP ({{ monitorStatuses ? monitorStatuses.filter(monitor => monitor.value !== MonitorStatusEnum.DOWN).length : 0 }})</h2>
     <div class="container">
 
       <MonitorCard 
-        v-for="monitorStatus in monitorStatuses?.filter(monitor => monitor.value !== '0')" 
+        v-for="monitorStatus in monitorStatuses?.filter(monitor => monitor.value !== MonitorStatusEnum.DOWN)" 
         :title="monitorStatus.labels.monitor_name" 
         :key="monitorStatus.labels.monitor_name"
         :status="monitorStatus.value"
