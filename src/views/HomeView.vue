@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import KumaDashboard from '../components/KumaDashboard.vue';
+import KumaDashboard from '../components/KumaDashboard.vue'
 </script>
 
 <template>
