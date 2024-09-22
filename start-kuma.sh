@@ -1,7 +1,4 @@
-npm run build
-
-docker compose down
-
-docker build -t kuma-screen:latest .
-
-docker compose up --build
+docker container stop kuma-screen .
+docker container remove kuma-screen .
+docker build -t kuma-screen .
+docker run -d --restart=always -p 3500:80 --name kuma-screen kuma-screen
