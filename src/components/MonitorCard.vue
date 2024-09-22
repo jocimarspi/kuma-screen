@@ -15,7 +15,7 @@ function getStatusClass() {
       return 'monitor--up'
     case MonitorStatusEnum.PENDING:
       return 'monitor--pending'
-    case MonitorStatusEnum.MAINTENANCE:
+    case MonitorStatusEnum.MAINTANING:
       return 'monitor--maintenance'
     default:
       return 'monitor-undefined'

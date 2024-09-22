@@ -80,7 +80,7 @@ onUnmounted(() => {
     </p>
   </header>
 
-  <div v-if="downMonitors?.length > 0" id="down-services">
+  <div v-if="downMonitors?.length || 0 > 0" id="down-services">
     <h2 class="container__title">DOWN ({{ downMonitors?.length }})</h2>
     <div class="container">
       <MonitorCard
@@ -92,7 +92,7 @@ onUnmounted(() => {
     </div>
   </div>
 
-  <div v-if="upMonitors?.length > 0" id="up-services">
+  <div v-if="upMonitors?.length || 0 > 0" id="up-services">
     <h2 class="container__title">UP ({{ upMonitors?.length }})</h2>
     <div class="container">
       <MonitorCard
