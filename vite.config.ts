@@ -6,10 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-  ],
+  plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
@@ -19,11 +16,10 @@ export default defineConfig({
     proxy: {
       // Quando uma requisição para /api for feita, será redirecionada para http://localhost:3001
       '/uptime': {
-        target: 'http://localhost:3001', // URL do backend
-        changeOrigin: true,               // Muda a origem para a origem do backend
-        rewrite: (path) => path.replace(/^\/uptime/, ''), // Remove '/api' do caminho
-      },
-    },
-  },
+        target: 'http://10.200.10.101:3001', // URL do backend
+        changeOrigin: true, // Muda a origem para a origem do backend
+        rewrite: (path) => path.replace(/^\/uptime/, '') // Remove '/api' do caminho
+      }
+    }
+  }
 })
- 
