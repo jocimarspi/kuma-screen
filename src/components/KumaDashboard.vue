@@ -23,7 +23,10 @@ function getStatusOrder(monitorStatus: MonitorStatusEnum) {
 const upMonitors = computed(() => {
   return monitorStatuses.value
     ? monitorStatuses.value
-        .filter((monitor) => monitor.value !== MonitorStatusEnum.DOWN)
+        .filter(
+          (monitor) =>
+            monitor.value !== MonitorStatusEnum.DOWN && monitor.labels.monitor_type !== 'group'
+        )
         .sort(
           (a, b) =>
             getStatusOrder(a.value) < getStatusOrder(b.value)
