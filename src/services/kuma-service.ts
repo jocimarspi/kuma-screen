@@ -5,6 +5,7 @@ const KUMATOKEN = import.meta.env.VITE_UPTIME_KUMA_TOKEN
 
 interface MonitorStatusLabel {
   monitor_name: string
+  monitor_type: string
 }
 
 export enum MonitorStatusEnum {
