@@ -9,7 +9,10 @@ const lastUpdate = ref<string>('')
 
 const downMonitors = computed(() => {
   return monitorStatuses.value
-    ? monitorStatuses.value.filter((monitor) => monitor.value === MonitorStatusEnum.DOWN)
+    ? monitorStatuses.value.filter(
+        (monitor) =>
+          monitor.value === MonitorStatusEnum.DOWN && monitor.labels.monitor_type !== 'group'
+      )
     : undefined
 })
 
