@@ -35,33 +35,33 @@ function getStatusClass() {
   align-items: center;
   justify-content: start;
   padding: 30px;
-  font-size: 3rem;
+  font-size: 2.5vw;
   font-weight: 700;
   line-height: 1;
   text-align: center;
   border-radius: 0.5vw;
   width: 100%;
-  background-color: #ffffff;
+  background-color: var(--white);
   white-space: nowrap;
   overflow: hidden;
 }
 
 .monitor--up {
-  background-color: #1a9b27;
+  background-color: var(--up-monitors);
 }
 
 .monitor--down {
-  background-color: #c51515;
+  background-color: var(--down-monitors);
   animation: pulse 0.5s ease-in-out infinite alternate;
 }
 
 .monitor--pending {
-  background-color: #e7c52d;
+  background-color: var(--pending-monitors);
   animation: pulse 0.5s ease-in-out infinite alternate;
 }
 
 .monitor--maintenance {
-  background-color: #2998e2;
+  background-color: var(--maintenance-monitors);
   animation: pulse 0.5s ease-in-out infinite alternate;
 }
 

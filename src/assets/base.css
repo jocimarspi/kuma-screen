@@ -5,6 +5,7 @@
   --white: #ffffff;
   --white-soft: #f8f8f8;
   --white-mute: #f2f2f2;
+  --yellow-highlight: #f6eb61;
 
   --black: #181818;
   --black-soft: #222222;
@@ -14,6 +15,10 @@
 /* semantic color variables for this project */
 :root {
   --color-background: var(--vt-c-black);
+  --down-monitors: #c51515;
+  --up-monitors: #1a9b27;
+  --pending-monitors: #e7c52d;
+  --maintenance-monitors: #2998e2;
 }
 
 *,
