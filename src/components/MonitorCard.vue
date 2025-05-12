@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
-import { MonitorStatusEnum } from '@/services/kuma-service'
+import { defineProps, defineEmits } from 'vue'
+import { MonitorStatusEnum, type MonitorStatus } from '@/services/kuma-service'
 
-const props = defineProps<{
-  title: string
-  status?: MonitorStatusEnum
-}>()
+export type MonitorStatusPropsType = {
+  monitor: MonitorStatus
+}
+
+const props = defineProps<MonitorStatusPropsType>()
+
+const emit = defineEmits(['open-details'])
 
 function getStatusClass() {
-  switch (props.status) {
+  switch (props.monitor.value) {
     case MonitorStatusEnum.DOWN:
       return 'monitor--down'
     case MonitorStatusEnum.UP:
@@ -24,8 +27,8 @@ function getStatusClass() {
 </script>
 
 <template>
-  <div :class="['monitor', getStatusClass()]">
-    <h4>{{ title }}</h4>
+  <div :class="['monitor', getStatusClass()]" @click="emit('open-details', { monitor })">
+    <h4>{{ monitor.labels.monitor_name }}</h4>
   </div>
 </template>
 
@@ -44,6 +47,7 @@ function getStatusClass() {
   background-color: var(--white);
   white-space: nowrap;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .monitor--up {

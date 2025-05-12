@@ -14,6 +14,13 @@ export enum MonitorStatusEnum {
   PENDING = '2',
   MAINTANING = '3'
 }
+
+export const MonitorStatusEnumLabel = {
+  [MonitorStatusEnum.DOWN]: 'Down',
+  [MonitorStatusEnum.UP]: 'Up',
+  [MonitorStatusEnum.PENDING]: 'Pending',
+  [MonitorStatusEnum.MAINTANING]: 'Maintaning'
+}
 export interface MonitorStatus {
   labels: MonitorStatusLabel
   value: MonitorStatusEnum

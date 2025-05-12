@@ -1,11 +1,29 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
-import MonitorCard from './MonitorCard.vue'
+import MonitorCard, { type MonitorStatusPropsType } from './MonitorCard.vue'
+import MonitorCardDetails from './MonitorCardDetails.vue'
 import kumaService, { MonitorStatusEnum, type MonitorStatus } from '@/services/kuma-service'
 
 const monitorStatuses = ref<MonitorStatus[]>()
 const updateTimer = ref(0)
 const lastUpdate = ref<string>('')
+
+const selectedMonitor = ref<MonitorStatusPropsType>({
+  monitor: {} as MonitorStatus
+})
+
+const isModalVisible = ref(false)
+
+function openModal(monitor: MonitorStatusPropsType) {
+  console.log('Monitor:', monitor)
+
+  selectedMonitor.value = monitor
+  isModalVisible.value = true
+}
+
+function closeModal() {
+  isModalVisible.value = false
+}
 
 const downMonitors = computed(() => {
   return monitorStatuses.value
@@ -77,9 +95,9 @@ onUnmounted(() => {
     <div class="container">
       <MonitorCard
         v-for="monitorStatus in downMonitors"
-        :title="monitorStatus.labels.monitor_name"
+        :monitor="monitorStatus"
         :key="monitorStatus.labels.monitor_name"
-        :status="monitorStatus.value"
+        @open-details="openModal"
       />
     </div>
   </div>
@@ -94,12 +112,18 @@ onUnmounted(() => {
     <div class="container">
       <MonitorCard
         v-for="monitorStatus in penddingMonitors"
-        :title="monitorStatus.labels.monitor_name"
+        :monitor="monitorStatus"
         :key="monitorStatus.labels.monitor_name"
-        :status="monitorStatus.value"
+        @open-details="openModal"
       />
     </div>
   </div>
+
+  <MonitorCardDetails
+    :monitor="selectedMonitor.monitor"
+    :isVisible="isModalVisible"
+    @close="closeModal"
+  />
 
   <div
     v-if="(downMonitors?.length || 0) === 0 && (penddingMonitors?.length || 0) === 0"
