@@ -1,7 +1,6 @@
 import axios from 'axios'
 import parsePrometheusTextFormat from 'parse-prometheus-text-format'
-
-const KUMATOKEN = import.meta.env.VITE_UPTIME_KUMA_TOKEN
+import { useSettingsStore } from '@/stores/settings'
 
 interface MonitorStatusLabel {
   monitor_name: string
@@ -28,13 +27,20 @@ export interface MonitorStatus {
 
 class KumaService {
   async getMonitorStatus(): Promise<MonitorStatus[] | undefined> {
+    const settingsStore = useSettingsStore()
+
     try {
-      const kumaMetricsPrometheusResponse = await axios.get('/uptime/metrics', {
-        auth: {
-          username: '',
-          password: KUMATOKEN
+      // encodeURI (not encodeURIComponent): nginx's $arg_target is never
+      // url-decoded, so ':' and '/' must survive as literal characters.
+      const kumaMetricsPrometheusResponse = await axios.get(
+        `/uptime/metrics?target=${encodeURI(settingsStore.backendUrl)}`,
+        {
+          auth: {
+            username: '',
+            password: settingsStore.accessToken
+          }
         }
-      })
+      )
 
       if (!kumaMetricsPrometheusResponse?.data) return
 
@@ -46,6 +52,17 @@ class KumaService {
     } catch (error) {
       console.error('getMonitorStatus: ', error)
     }
+  }
+
+  async testConnection(backendUrl: string, accessToken: string): Promise<boolean> {
+    const url = backendUrl.trim().replace(/\/+$/, '')
+    await axios.get(`/uptime/metrics?target=${encodeURI(url)}`, {
+      auth: {
+        username: '',
+        password: accessToken
+      }
+    })
+    return true
   }
 }
 

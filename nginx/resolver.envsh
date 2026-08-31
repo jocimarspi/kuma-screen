@@ -1,0 +1,4 @@
+#!/bin/sh
+# Sourced by /docker-entrypoint.sh before 20-envsubst-on-templates.sh runs,
+# so RESOLVER_IP is set in time to be substituted into default.conf.template.
+export RESOLVER_IP=$(awk '/^nameserver/ { print $2; exit }' /etc/resolv.conf)
