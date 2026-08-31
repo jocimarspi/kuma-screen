@@ -33,7 +33,10 @@ server {
     set $backend $arg_target;
 
     rewrite ^/uptime(.*)$ $1 break;  # Remove o prefixo /uptime
-    proxy_pass $backend;
+    # proxy_pass com variável ignora o rewrite acima e reenvia a URI
+    # original do client ($request_uri) pro backend. Precisa concatenar
+    # $uri explicitamente pra usar o path já reescrito.
+    proxy_pass $backend$uri;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
