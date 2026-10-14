@@ -3,6 +3,9 @@ import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import MonitorCard, { type MonitorStatusPropsType } from './MonitorCard.vue'
 import MonitorCardDetails from './MonitorCardDetails.vue'
 import kumaService, { MonitorStatusEnum, type MonitorStatus } from '@/services/kuma-service'
+import { useSettingsStore } from '@/stores/settings'
+
+const settingsStore = useSettingsStore()
 
 const monitorStatuses = ref<MonitorStatus[]>()
 const updateTimer = ref(0)
@@ -48,11 +51,15 @@ function formatDate(date: Date): string {
 }
 
 async function updateMonitors() {
+  if (!settingsStore.accessToken) return
+
   const allMonitors = await kumaService.getMonitorStatus()
   monitorStatuses.value = allMonitors?.filter((monitor) => monitor.labels.monitor_type !== 'group')
 }
 
 async function startTimer() {
+  stopTimer()
+  updateMonitors()
   updateTimer.value = setInterval(async () => {
     updateMonitors()
   }, 10000) as unknown as number
@@ -62,6 +69,11 @@ function stopTimer() {
   clearInterval(updateTimer.value)
 }
 
+watch(
+  () => settingsStore.monitoringEnabled,
+  (enabled) => (enabled ? startTimer() : stopTimer())
+)
+
 watch(monitorStatuses, (newValue) => {
   if (newValue) {
     lastUpdate.value = formatDate(new Date()) // Atualiza com a data e hora atuais
@@ -69,8 +81,7 @@ watch(monitorStatuses, (newValue) => {
 })
 
 onMounted(async () => {
-  updateMonitors()
-  startTimer()
+  if (settingsStore.monitoringEnabled) startTimer()
 })
 
 onUnmounted(() => {
@@ -118,6 +129,13 @@ onUnmounted(() => {
       />
     </div>
   </div>
+
+  <span
+    v-if="settingsStore.monitoringEnabled"
+    class="live-indicator"
+    title="Monitoramento ativo"
+    aria-label="Monitoramento ativo"
+  ></span>
 
   <MonitorCardDetails
     :monitor="selectedMonitor.monitor"
@@ -239,6 +257,37 @@ h2 {
 .highlight {
   font-weight: 700;
   color: var(--yellow-highlight);
+}
+
+.live-indicator {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--up-monitors);
+  z-index: 10;
+}
+
+.live-indicator::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--up-monitors);
+  animation: live-ping 1.5s ease-out infinite;
+}
+
+@keyframes live-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
 }
 
 @keyframes pulse {
